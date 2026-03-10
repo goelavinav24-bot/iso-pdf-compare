@@ -3,8 +3,8 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Upload, Layers, ZoomIn, ZoomOut, Download, MoveHorizontal, MoveVertical, RefreshCcw, Settings, FileText } from "lucide-react";
 import * as pdfjsLib from "pdfjs-dist";
 
-(pdfjsLib as any).GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.min.js";
+import workerSrc from "pdfjs-dist/build/pdf.worker.mjs?url";
+(pdfjsLib as any).GlobalWorkerOptions.workerSrc = workerSrc;
 
 interface PdfHandle {
   file?: File;
