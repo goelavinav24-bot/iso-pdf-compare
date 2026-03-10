@@ -1,0 +1,44 @@
+diff --git a/src/IsoCompareApp.tsx b/src/IsoCompareApp.tsx
+index 1111111..2222222 100644
+--- a/src/IsoCompareApp.tsx
++++ b/src/IsoCompareApp.tsx
+@@ -1,12 +1,12 @@
+ import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+ import { Upload, Layers, ZoomIn, ZoomOut, Download, MoveHorizontal, MoveVertical, RefreshCcw, Settings, FileText } from "lucide-react";
+-import * as pdfjsLib from "pdfjs-dist";
++import * as pdfjsLib from "pdfjs-dist";
++import workerSrc from "pdfjs-dist/build/pdf.worker?url";
+
+-(pdfjsLib as any).GlobalWorkerOptions.workerSrc =
+-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.min.js";
++// Use locally bundled worker (reliable on Vercel)
++(pdfjsLib as any).GlobalWorkerOptions.workerSrc = workerSrc;
+
+ interface PdfHandle {
+   file?: File;
+   url?: string;
+   doc?: any;
+diff --git a/vite.config.ts b/vite.config.ts
+index 3333333..4444444 100644
+--- a/vite.config.ts
++++ b/vite.config.ts
+@@ -1,9 +1,17 @@
+ import { defineConfig } from 'vite'
+ import react from '@vitejs/plugin-react'
+
+ export default defineConfig({
+-  plugins: [react()],
+-  server: { port: 5173 },
+-  build: { outDir: 'dist' }
++  plugins: [react()],
++  server: { port: 5173 },
++  build: { outDir: 'dist' },
++  // Help Vite resolve pdfjs worker cleanly in dev and build
++  optimizeDeps: {
++    include: [
++      'pdfjs-dist/build/pdf',
++      'pdfjs-dist/build/pdf.worker'
++    ],
++  },
++  worker: { format: 'es' }
+ })
